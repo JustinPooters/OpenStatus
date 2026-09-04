@@ -88,6 +88,7 @@
       "id": "mssql",
       "category": "databases",
       "type": "tcp",
+      "enabled": false,
       "name": "Microsoft SQL Server",
       "description": "mssql.jxhq.net · TCP 1433",
       "host": "mssql.jxhq.net",

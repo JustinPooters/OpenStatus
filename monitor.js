@@ -50,7 +50,7 @@ async function checkDns(monitor) {
   if (monitor.servers?.length) resolver.setServers(monitor.servers);
   const values = await Promise.race([
     resolver.resolve(monitor.hostname, monitor.recordType ?? 'A'),
-    new Promise((_, reject) => setTimeout(() => reject(new Error('DNS-controle verlopen (timeout)')), monitor.timeoutMs ?? 5000))
+    new Promise((_, reject) => setTimeout(() => reject(new Error('DNS check timed out')), monitor.timeoutMs ?? 5000))
   ]);
   const expected = monitor.expectedValues ?? [];
   const flattened = values.map(value => typeof value === 'string' ? value : JSON.stringify(value));
@@ -81,7 +81,7 @@ export async function checkMonitor(monitor) {
   const confirmedDown = failures.length >= (config.site.failureThreshold ?? 2) && failures.every(check => !check.ok);
   const confirmedUp = recoveries.length >= (config.site.recoveryThreshold ?? 2) && recoveries.every(check => check.ok);
   if (confirmedDown && !active) {
-    openIncident.run(monitor.id, checkedAt, `Onbereikbaarheid door storing: ${monitor.name}`, 'Automatisch gedetecteerde storing', reason);
+    openIncident.run(monitor.id, checkedAt, `Service disruption: ${monitor.name}`, 'Automatically detected outage', reason);
   } else if (!ok && active) {
     updateIncident.run(reason, active.id);
   } else if (confirmedUp && active) {
@@ -93,4 +93,3 @@ export async function checkMonitor(monitor) {
 export async function runChecks() {
   return Promise.allSettled(monitors.map(checkMonitor));
 }
-

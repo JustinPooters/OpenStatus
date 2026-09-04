@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="nl">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,8 +10,9 @@
   <link rel="stylesheet" href="/status.css">
 </head>
 <body class="bg-[#f4f1eb] text-[#111313] antialiased">
-  <% const labels={up:'Alles werkt',degraded:'Verminderde prestaties',down:'Er is een storing',unknown:'Status wordt gemeten'}; %>
-  <% const serviceLabels={up:'Operationeel',slow:'Vertraagd',down:'Storing',unknown:'Nog geen data'}; %>
+  <% const labels={up:'All systems operational',degraded:'Some systems are degraded',down:'Service disruption detected',unknown:'Status is being measured'}; %>
+  <% const serviceLabels={up:'Operational',slow:'Degraded',down:'Outage',unknown:'No data yet'}; %>
+  <% const incidentText=value=>String(value||'').replace('Onbereikbaarheid door storing:','Service disruption:').replace('Automatisch gedetecteerde storing','Automatically detected outage'); %>
   <main class="mx-auto min-h-screen max-w-5xl px-5 py-10 sm:px-8 sm:py-16">
     <header class="mb-12 flex items-start justify-between gap-6">
       <div>
@@ -25,12 +26,12 @@
       <a href="https://justinp.dev" class="hidden border-b-2 border-[#ff3b3b] pb-1 text-sm font-bold sm:block">justinp.dev</a>
     </header>
 
-    <section class="mb-12 border border-[#d6d2ca] bg-white p-5 sm:p-7" aria-label="Algemene status">
+    <section class="mb-12 border border-[#d6d2ca] bg-white p-5 sm:p-7" aria-label="Overall status">
       <div class="flex items-center gap-4">
         <span class="status-dot <%= status.overall %>"></span>
         <div>
           <p class="font-bold"><%= labels[status.overall] %></p>
-          <p class="text-sm text-[#6c7171]">Laatst bijgewerkt: <time datetime="<%= status.generatedAt %>"><%= new Date(status.generatedAt).toLocaleString('nl-NL',{timeZone:status.site.timezone}) %></time></p>
+          <p class="text-sm text-[#6c7171]">Last updated: <time datetime="<%= status.generatedAt %>"><%= new Date(status.generatedAt).toLocaleString('en-GB',{timeZone:status.site.timezone}) %></time></p>
         </div>
       </div>
     </section>
@@ -46,13 +47,13 @@
             <article class="border border-[#d6d2ca] bg-white p-5 sm:p-6">
               <div class="mb-6 flex flex-wrap items-start justify-between gap-4">
                 <div><h3 class="font-bold"><%= service.name %></h3><p class="mt-1 text-sm text-[#747979]"><%= service.description %></p></div>
-                <div class="text-right"><p class="state-label <%= service.state %>"><%= serviceLabels[service.state] %></p><p class="mt-1 text-xs text-[#8a8e8e]"><%= service.uptime===null?'--':service.uptime.toFixed(2)+'%' %> / <%= status.site.historyDays %> dagen</p></div>
+                <div class="text-right"><p class="state-label <%= service.state %>"><%= serviceLabels[service.state] %></p><p class="mt-1 text-xs text-[#8a8e8e]"><%= service.uptime===null?'--':service.uptime.toFixed(2)+'%' %> / <%= status.site.historyDays %> days</p></div>
               </div>
-              <div class="history" style="grid-template-columns:repeat(<%= service.days.length %>,minmax(3px,1fr))" aria-label="Beschikbaarheid over de laatste <%= status.site.historyDays %> dagen">
-                <% service.days.forEach(day => { %><span class="day <%= day.state %>" title="<%= day.date %> · <%= day.uptime===null?'geen metingen':day.uptime.toFixed(2)+'% uptime' %>"></span><% }) %>
+              <div class="history" style="grid-template-columns:repeat(<%= service.days.length %>,minmax(3px,1fr))" aria-label="Availability over the last <%= status.site.historyDays %> days">
+                <% service.days.forEach(day => { %><span class="day <%= day.state %>" title="<%= day.date %> · <%= day.uptime===null?'no measurements':day.uptime.toFixed(2)+'% uptime' %>"></span><% }) %>
               </div>
-              <div class="mt-2 flex justify-between text-[11px] text-[#969999]"><span><%= status.site.historyDays %> dagen geleden</span><span>vandaag</span></div>
-              <% if(service.latest){ %><p class="mt-4 text-xs text-[#747979]">Laatste controle: <%= service.latest.response_ms %> ms<%= service.latest.status_code?' · HTTP '+service.latest.status_code:'' %></p><% } %>
+              <div class="mt-2 flex justify-between text-[11px] text-[#969999]"><span><%= status.site.historyDays %> days ago</span><span>today</span></div>
+              <% if(service.latest){ %><p class="mt-4 text-xs text-[#747979]">Latest check: <%= service.latest.response_ms %> ms<%= service.latest.status_code?' · HTTP '+service.latest.status_code:'' %></p><% } %>
             </article>
           <% }) %>
         </div>
@@ -60,13 +61,13 @@
     <% }) %>
 
     <section class="mb-12">
-      <div class="mb-4 border-b border-[#cfcac1] pb-3"><h2 class="text-xl font-black">Recente incidenten</h2><p class="mt-1 text-sm text-[#747979]">Onbereikbaarheid door storing in de laatste <%= status.site.historyDays %> dagen.</p></div>
+      <div class="mb-4 border-b border-[#cfcac1] pb-3"><h2 class="text-xl font-black">Recent incidents</h2><p class="mt-1 text-sm text-[#747979]">Service disruptions recorded during the last <%= status.site.historyDays %> days.</p></div>
       <% if(!status.incidents.length){ %>
-        <div class="border border-dashed border-[#c9c4bb] p-8 text-center text-sm text-[#747979]">Geen incidenten gemeld. Verdacht rustig, precies zoals het hoort.</div>
+        <div class="border border-dashed border-[#c9c4bb] p-8 text-center text-sm text-[#747979]">No incidents reported. Suspiciously quiet, exactly as it should be.</div>
       <% } else { %>
         <div class="divide-y divide-[#dedad2] border border-[#d6d2ca] bg-white">
           <% status.incidents.forEach(incident => { const service=status.services.find(s=>s.id===incident.monitor_id); %>
-            <article class="p-5"><div class="flex flex-wrap justify-between gap-2"><h3 class="font-bold"><%= incident.title %></h3><span class="text-xs font-bold <%= incident.resolved_at?'text-emerald-700':'text-red-600' %>"><%= incident.resolved_at?'Opgelost':'Actief' %></span></div><p class="mt-2 text-sm text-[#686d6d]"><%= incident.cause %><% if(service){ %> · <%= service.name %><% } %></p><p class="mt-2 text-xs text-[#969999]"><%= new Date(incident.started_at).toLocaleString('nl-NL',{timeZone:status.site.timezone}) %><% if(incident.resolved_at){ %> – <%= new Date(incident.resolved_at).toLocaleString('nl-NL',{timeZone:status.site.timezone}) %><% } %></p></article>
+            <article class="p-5"><div class="flex flex-wrap justify-between gap-2"><h3 class="font-bold"><%= incidentText(incident.title) %></h3><span class="text-xs font-bold <%= incident.resolved_at?'text-emerald-700':'text-red-600' %>"><%= incident.resolved_at?'Resolved':'Active' %></span></div><p class="mt-2 text-sm text-[#686d6d]"><%= incidentText(incident.cause) %><% if(service){ %> · <%= service.name %><% } %></p><p class="mt-2 text-xs text-[#969999]"><%= new Date(incident.started_at).toLocaleString('en-GB',{timeZone:status.site.timezone}) %><% if(incident.resolved_at){ %> – <%= new Date(incident.resolved_at).toLocaleString('en-GB',{timeZone:status.site.timezone}) %><% } %></p></article>
           <% }) %>
         </div>
       <% } %>
@@ -75,4 +76,3 @@
   </main>
 </body>
 </html>
-

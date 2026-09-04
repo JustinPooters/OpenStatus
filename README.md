@@ -5,7 +5,7 @@
 [![SQLite](https://img.shields.io/badge/SQLite-history-003B57?logo=sqlite&logoColor=white)](https://sqlite.org/)
 [![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)](./Dockerfile)
 [![CapRover](https://img.shields.io/badge/CapRover-ready-00B8D9)](./captain-definition)
-[![License: MIT](https://img.shields.io/badge/License-MIT-ff3b3b.svg)](./LICENSE)
+[![License: WTFPL](https://img.shields.io/badge/License-WTFPL-ff3b3b.svg)](./LICENSE)
 
 A small, self-hosted status page for monitoring websites, ports and DNS records. Built with Node.js, Express, EJS, SQLite and Tailwind CSS v4.
 
@@ -157,7 +157,7 @@ Issues and pull requests are welcome. Please keep changes focused, document new 
 
 ## 📄 License
 
-OpenStatus is available under the [MIT License](./LICENSE).
+OpenStatus is available under the [WTFPL](./LICENSE). Do what the fuck you want to.
 
 <sub>Still curious. Still monitoring. Built with scheduled requests and a reasonable amount of coffee.</sub>
 

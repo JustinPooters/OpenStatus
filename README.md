@@ -42,7 +42,7 @@ npm install
 npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3000](http://localhost:3000). The container defaults to port 80 for CapRover; local Node runs use port 3000 unless `PORT` is set.
 
 | Endpoint | Purpose |
 | --- | --- |

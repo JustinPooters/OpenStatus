@@ -1,7 +1,7 @@
 {
   "site": {
     "title": "OpenStatus",
-    "description": "Live beschikbaarheid van websites, services en infrastructuur.",
+    "description": "Live availability of websites, services and infrastructure.",
     "timezone": "Europe/Amsterdam",
     "historyDays": 30,
     "checkIntervalMs": 60000,
@@ -10,8 +10,8 @@
     "recoveryThreshold": 2
   },
   "categories": [
-    { "id": "websites", "name": "Websites", "description": "Publieke websites en applicaties" },
-    { "id": "infrastructure", "name": "Infrastructuur", "description": "Netwerkdiensten en endpoints" }
+    { "id": "websites", "name": "Websites", "description": "Public websites and applications" },
+    { "id": "infrastructure", "name": "Infrastructure", "description": "Network services and endpoints" }
   ],
   "monitors": [
     {
@@ -19,7 +19,7 @@
       "category": "websites",
       "type": "http",
       "name": "jxhq.net",
-      "description": "Website en diensten van JXHQ",
+      "description": "JXHQ website and services",
       "url": "https://jxhq.net/",
       "expectedStatuses": [200],
       "requiredText": "JXHQ",
@@ -31,7 +31,7 @@
       "category": "websites",
       "type": "http",
       "name": "Google",
-      "description": "Externe referentiecontrole",
+      "description": "External reference check",
       "url": "https://www.google.com/",
       "expectedStatuses": [200],
       "requiredText": "Google",
@@ -43,7 +43,7 @@
       "category": "infrastructure",
       "type": "dns",
       "name": "Cloudflare DNS",
-      "description": "DNS-resolutie van one.one.one.one",
+      "description": "DNS resolution for one.one.one.one",
       "hostname": "one.one.one.one",
       "recordType": "A",
       "expectedValues": ["1.1.1.1", "1.0.0.1"],
@@ -54,8 +54,8 @@
       "category": "infrastructure",
       "type": "tcp",
       "enabled": false,
-      "name": "Voorbeeld TCP-service",
-      "description": "Controleert of een IP-adres of domein en poort bereikbaar zijn",
+      "name": "Example TCP service",
+      "description": "Checks whether a domain or IP address is reachable on a port",
       "host": "example.com",
       "port": 443,
       "timeoutMs": 5000
@@ -65,7 +65,7 @@
       "category": "infrastructure",
       "type": "dns",
       "enabled": false,
-      "name": "Voorbeeld DNS-controle",
+      "name": "Example DNS check",
       "hostname": "example.com",
       "recordType": "A",
       "expectedValues": [],
